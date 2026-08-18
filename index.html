@@ -27,32 +27,7 @@
     align-items: center;
     padding: 4.5rem 1.5rem 3rem;
     text-align: center;
-    transition: background 0.4s ease, color 0.4s ease;
     overflow-x: hidden;
-  }
-
-  .theme-picker {
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    display: flex;
-    gap: 0.5rem;
-    z-index: 10;
-  }
-
-  .theme-dot {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    cursor: pointer;
-    padding: 0;
-    transition: border-color 0.2s ease, transform 0.2s ease;
-  }
-
-  .theme-dot.active {
-    border-color: var(--text);
-    transform: scale(1.15);
   }
 
   h1 {
@@ -61,17 +36,27 @@
     letter-spacing: 0.05em;
     color: var(--accent);
     margin-bottom: 3rem;
-    transition: color 0.4s ease;
+  }
+
+  .pills-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    align-items: center;
   }
 
   .pill-btn {
+    position: relative;
     width: 190px;
-    height: 80px;
+    height: 68px;
     border-radius: 999px;
     border: none;
     cursor: pointer;
-    background: linear-gradient(90deg, #ffffff 50%, var(--accent) 50%);
-    transition: transform 0.15s ease, background 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 1.3rem;
+    transition: transform 0.15s ease;
   }
 
   .pill-btn:active {
@@ -80,6 +65,14 @@
 
   .pill-btn.clicked {
     animation: bounce 0.4s ease;
+  }
+
+  .pill-btn .dose {
+    position: relative;
+    z-index: 1;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #ffffff;
   }
 
   @keyframes bounce {
@@ -122,6 +115,18 @@
     font-weight: 500;
   }
 
+  .entry .entry-info {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .entry .entry-dose {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    font-weight: 500;
+  }
+
   .entry button {
     background: none;
     border: none;
@@ -146,12 +151,21 @@
 </head>
 <body>
 
-<div class="theme-picker" id="themePicker"></div>
-
 <h1>PILLZ</h1>
 
-<button class="pill-btn" id="pillBtn" aria-label="Enregistrer une prise"></button>
-<p class="hint">Appuie pour enregistrer une prise</p>
+<div class="pills-group">
+  <button class="pill-btn" data-dose="30" style="background: linear-gradient(90deg, #ffffff 50%, #8f6bb3 50%)" aria-label="Enregistrer 30mg">
+    <span class="dose">30mg</span>
+  </button>
+  <button class="pill-btn" data-dose="20" style="background: linear-gradient(90deg, #ffffff 50%, #b28fd1 50%)" aria-label="Enregistrer 20mg">
+    <span class="dose">20mg</span>
+  </button>
+  <button class="pill-btn" data-dose="10" style="background: linear-gradient(90deg, #ffffff 50%, #d5b8ea 50%)" aria-label="Enregistrer 10mg">
+    <span class="dose">10mg</span>
+  </button>
+</div>
+
+<p class="hint">Appuie sur un dosage pour enregistrer une prise</p>
 
 <div class="history">
   <h2>Aujourd'hui</h2>
@@ -159,46 +173,12 @@
 </div>
 
 <script>
-  const themes = [
-    { bg: '#f7f0e6', text: '#4a3b45', accent: '#c9a8e0' },
-    { bg: '#2b2438', text: '#f3e9f7', accent: '#e0a3c8' },
-    { bg: '#233029', text: '#e6f2ea', accent: '#9bc9a8' },
-    { bg: '#2e2624', text: '#f5e8dc', accent: '#e0b088' },
-    { bg: '#f0f7f2', text: '#37453d', accent: '#a8d4b5' },
-    { bg: '#fdf6ec', text: '#4a4033', accent: '#f0c987' }
-  ];
-
-  const root = document.documentElement;
-  const picker = document.getElementById('themePicker');
-  const pillBtn = document.getElementById('pillBtn');
   const entriesList = document.getElementById('entriesList');
+  const pillButtons = document.querySelectorAll('.pill-btn');
 
   function todayKey() {
     return new Date().toISOString().slice(0, 10);
   }
-
-  function applyTheme(theme, index) {
-    root.style.setProperty('--bg', theme.bg);
-    root.style.setProperty('--text', theme.text);
-    root.style.setProperty('--accent', theme.accent);
-    document.querySelectorAll('.theme-dot').forEach((dot, i) => {
-      dot.classList.toggle('active', i === index);
-    });
-    localStorage.setItem('pillz-theme', index);
-  }
-
-  themes.forEach((theme, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'theme-dot';
-    btn.style.background = theme.accent;
-    btn.setAttribute('aria-label', 'Thème ' + (i + 1));
-    btn.addEventListener('click', () => applyTheme(theme, i));
-    picker.appendChild(btn);
-  });
-
-  const saved = localStorage.getItem('pillz-theme');
-  const initialIndex = saved !== null ? parseInt(saved) : 0;
-  applyTheme(themes[initialIndex], initialIndex);
 
   function getEntries() {
     const data = JSON.parse(localStorage.getItem('pillz-entries') || '{}');
@@ -211,11 +191,11 @@
     localStorage.setItem('pillz-entries', JSON.stringify(data));
   }
 
-  function addEntry() {
+  function addEntry(dose) {
     const now = new Date();
     const time = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
     const entries = getEntries();
-    entries.unshift(time);
+    entries.unshift({ time, dose });
     saveEntries(entries);
     renderHistory();
   }
@@ -234,20 +214,27 @@
       entriesList.innerHTML = '<p class="empty">Aucune prise enregistrée</p>';
       return;
     }
-    entries.forEach((time, i) => {
+    entries.forEach((entry, i) => {
       const row = document.createElement('div');
       row.className = 'entry';
-      row.innerHTML = `<span>${time}</span><button aria-label="Supprimer">✕</button>`;
+      row.innerHTML = `
+        <span class="entry-info">
+          <span>${entry.time}</span>
+          <span class="entry-dose">${entry.dose}mg</span>
+        </span>
+        <button aria-label="Supprimer">✕</button>`;
       row.querySelector('button').addEventListener('click', () => deleteEntry(i));
       entriesList.appendChild(row);
     });
   }
 
-  pillBtn.addEventListener('click', () => {
-    pillBtn.classList.remove('clicked');
-    void pillBtn.offsetWidth;
-    pillBtn.classList.add('clicked');
-    addEntry();
+  pillButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.remove('clicked');
+      void btn.offsetWidth;
+      btn.classList.add('clicked');
+      addEntry(btn.dataset.dose);
+    });
   });
 
   renderHistory();
