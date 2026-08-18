@@ -1,280 +1,177 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PILLZ</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect x=%2225%22 y=%2235%22 width=%2250%22 height=%2230%22 rx=%2215%22 fill=%22%23d16bb5%22/><rect x=%2225%22 y=%2235%22 width=%2225%22 height=%2230%22 rx=%2215%22 fill=%22%237a6d92%22/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect x=%2210%22 y=%2235%22 width=%2280%22 height=%2230%22 rx=%2215%22 fill=%22%23ff4d94%22/><rect x=%2210%22 y=%2235%22 width=%2240%22 height=%2230%22 rx=%2215%22 fill=%22%23fff%22/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --accent: #ff4d94;
+    --bg: #0f0f14;
+    --text: #f5f5f7;
+    --pill-shadow: rgba(255, 77, 148, 0.4);
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: linear-gradient(135deg, #ffe6f0, #e6f0ff);
     min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 24px 16px 60px;
-    color: #3a2e4d;
-  }
-  h1 {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 2.4rem;
-    font-weight: 700;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-    background: linear-gradient(90deg, #d16bb5, #7a6d92);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  p.subtitle {
-    font-size: 0.85rem;
-    color: #7a6d92;
-    margin-bottom: 28px;
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 2rem;
     text-align: center;
-    font-style: italic;
+    transition: background 0.4s ease, color 0.4s ease;
+    overflow-x: hidden;
   }
-  .pill-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    width: 110px;
+
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(2.5rem, 10vw, 4.5rem);
+    letter-spacing: 0.03em;
+    color: var(--accent);
+    text-transform: uppercase;
+    transition: color 0.4s ease;
+  }
+
+  .pill-btn {
+    width: 140px;
     height: 60px;
-    padding: 0;
-    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
-    transition: transform 0.15s ease;
+    border-radius: 999px;
+    border: none;
+    background: linear-gradient(135deg, var(--accent), #ffffff 200%);
+    background-size: 250% 250%;
+    background-position: 0% 50%;
+    cursor: pointer;
+    box-shadow: 0 8px 24px var(--pill-shadow);
+    position: relative;
+    transition: transform 0.15s ease, box-shadow 0.3s ease, background 0.4s ease;
   }
-  .pill-shape {
-    width: 100%;
-    height: 100%;
+
+  .pill-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 50%; height: 100%;
+    background: rgba(255,255,255,0.9);
+    border-radius: 999px 0 0 999px;
   }
-  .pill-button:active {
-    transform: scale(0.9);
+
+  .pill-btn:active {
+    transform: scale(0.9) rotate(-8deg);
   }
-  .pill-button.taken {
+
+  .pill-btn.clicked {
     animation: pop 0.5s ease;
   }
+
   @keyframes pop {
-    0% { transform: scale(1); }
-    30% { transform: scale(1.3) rotate(-10deg); }
-    60% { transform: scale(0.9) rotate(8deg); }
+    0%   { transform: scale(1) rotate(0deg); }
+    30%  { transform: scale(1.3) rotate(15deg); }
+    50%  { transform: scale(0.85) rotate(-10deg); }
+    70%  { transform: scale(1.1) rotate(5deg); }
     100% { transform: scale(1) rotate(0deg); }
   }
-  .status {
-    margin-top: 18px;
-    font-size: 1rem;
-    font-weight: 600;
-    text-align: center;
-    min-height: 24px;
+
+  .subtitle {
+    font-size: 0.95rem;
+    opacity: 0.6;
+    letter-spacing: 0.05em;
   }
-  .status.recent {
-    color: #d16bb5;
-  }
-  .status.warning {
-    color: #e0793c;
-  }
-  .history {
-    width: 100%;
-    max-width: 400px;
-    margin-top: 40px;
-  }
-  .history h2 {
-    font-size: 0.9rem;
-    margin-bottom: 12px;
-    color: #5c4d75;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-  }
-  .history-list {
-    list-style: none;
+
+  /* Sélecteur en haut à gauche */
+  .theme-picker {
+    position: fixed;
+    top: 1.2rem;
+    left: 1.2rem;
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    gap: 0.5rem;
+    z-index: 10;
   }
-  .history-item {
-    background: white;
-    border-radius: 14px;
-    padding: 12px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    font-size: 0.9rem;
-  }
-  .history-item button {
-    background: none;
-    border: none;
-    color: #c98cd9;
-    font-size: 1.1rem;
+
+  .swatch {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
     cursor: pointer;
-    padding: 4px 8px;
+    padding: 0;
+    transition: transform 0.2s ease, border-color 0.2s ease;
   }
-  .empty {
-    text-align: center;
-    color: #a99cc2;
-    font-size: 0.85rem;
-    margin-top: 12px;
+
+  .swatch:active {
+    transform: scale(0.85);
   }
-  .clear-all {
-    margin-top: 20px;
-    background: none;
-    border: 1px solid #d6c2e8;
-    color: #8a6ba8;
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    cursor: pointer;
-  }
-  .clear-all:active {
-    background: #f3e6fa;
+
+  .swatch.active {
+    border-color: var(--text);
+    transform: scale(1.15);
   }
 </style>
 </head>
 <body>
 
-<h1>PILLZ</h1>
-<p class="subtitle">Tap when you take your treatment</p>
+  <div class="theme-picker" id="themePicker"></div>
 
-<button class="pill-button" id="pillBtn" aria-label="Log a pill taken">
-  <svg class="pill-shape" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-    <rect x="2" y="2" width="96" height="56" rx="28" fill="#7a6d92"/>
-    <path d="M50 2 H72 A28 28 0 0 1 72 58 H50 Z" fill="#d16bb5"/>
-    <line x1="50" y1="4" x2="50" y2="56" stroke="white" stroke-width="1.5" opacity="0.5"/>
-  </svg>
-</button>
-
-<div class="status" id="status"></div>
-
-<div class="history">
-  <h2>History</h2>
-  <ul class="history-list" id="historyList"></ul>
-  <div class="empty" id="emptyMsg" style="display:none;">No entry yet</div>
-  <button class="clear-all" id="clearAll" style="display:none;">Clear all</button>
-</div>
+  <h1>PILLZ</h1>
+  <button class="pill-btn" id="pillBtn" aria-label="Cliquer la gélule"></button>
+  <p class="subtitle">appuie sur la gélule</p>
 
 <script>
-  const STORAGE_KEY = 'pillz_history';
+  const themes = [
+    // sombres
+    { bg: '#0f0f14', text: '#f5f5f7', accent: '#ff4d94' },
+    { bg: '#0d1117', text: '#e6edf3', accent: '#58a6ff' },
+    { bg: '#14100f', text: '#f5efe6', accent: '#ff8c42' },
+    // clairs pastel
+    { bg: '#fef6f9', text: '#3a2e35', accent: '#ff8fb3' },
+    { bg: '#f4f9f6', text: '#2e3a35', accent: '#7fd8a4' },
+    { bg: '#f7f5fb', text: '#332e3a', accent: '#b18fe0' }
+  ];
+
+  const root = document.documentElement;
+  const picker = document.getElementById('themePicker');
   const pillBtn = document.getElementById('pillBtn');
-  const statusEl = document.getElementById('status');
-  const historyList = document.getElementById('historyList');
-  const emptyMsg = document.getElementById('emptyMsg');
-  const clearAllBtn = document.getElementById('clearAll');
 
-  function getHistory() {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  }
-
-  function saveHistory(history) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-  }
-
-  function formatTime(timestamp) {
-    const date = new Date(timestamp);
-    return date.toLocaleString('en-US', {
-      day: '2-digit',
-      month: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
+  function applyTheme(theme, index) {
+    root.style.setProperty('--bg', theme.bg);
+    root.style.setProperty('--text', theme.text);
+    root.style.setProperty('--accent', theme.accent);
+    root.style.setProperty('--pill-shadow', theme.accent + '66');
+    localStorage.setItem('pillz-theme', index);
+    document.querySelectorAll('.swatch').forEach((s, i) => {
+      s.classList.toggle('active', i === index);
     });
   }
 
-  function timeAgoText(timestamp) {
-    const diffMs = Date.now() - timestamp;
-    const diffMin = Math.floor(diffMs / 60000);
-    if (diffMin < 1) return "just now";
-    if (diffMin < 60) return `${diffMin} min ago`;
-    const diffH = Math.floor(diffMin / 60);
-    if (diffH < 24) return `${diffH} h ago`;
-    const diffJ = Math.floor(diffH / 24);
-    return `${diffJ} d ago`;
-  }
+  themes.forEach((theme, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'swatch';
+    btn.style.background = theme.accent;
+    btn.setAttribute('aria-label', 'Thème ' + (i + 1));
+    btn.addEventListener('click', () => applyTheme(theme, i));
+    picker.appendChild(btn);
+  });
 
-  function updateStatus() {
-    const history = getHistory();
-    if (history.length === 0) {
-      statusEl.textContent = '';
-      statusEl.className = 'status';
-      return;
-    }
-    const last = history[0];
-    const diffH = (Date.now() - last.timestamp) / 3600000;
-    statusEl.textContent = `Last taken ${timeAgoText(last.timestamp)}`;
-    statusEl.className = 'status';
-    if (diffH < 4) {
-      statusEl.classList.add('recent');
-    } else if (diffH >= 8) {
-      statusEl.classList.add('warning');
-    }
-  }
-
-  function renderHistory() {
-    const history = getHistory();
-    historyList.innerHTML = '';
-
-    if (history.length === 0) {
-      emptyMsg.style.display = 'block';
-      clearAllBtn.style.display = 'none';
-      return;
-    }
-
-    emptyMsg.style.display = 'none';
-    clearAllBtn.style.display = 'block';
-
-    history.forEach(entry => {
-      const li = document.createElement('li');
-      li.className = 'history-item';
-      li.innerHTML = `
-        <span>${formatTime(entry.timestamp)}</span>
-        <button aria-label="Delete entry" data-id="${entry.id}">✕</button>
-      `;
-      historyList.appendChild(li);
-    });
-  }
-
-  function addEntry() {
-    const history = getHistory();
-    history.unshift({ id: Date.now(), timestamp: Date.now() });
-    saveHistory(history);
-    renderHistory();
-    updateStatus();
-  }
-
-  function removeEntry(id) {
-    let history = getHistory();
-    history = history.filter(e => e.id !== id);
-    saveHistory(history);
-    renderHistory();
-    updateStatus();
-  }
+  const saved = localStorage.getItem('pillz-theme');
+  const initialIndex = saved !== null ? parseInt(saved) : 0;
+  applyTheme(themes[initialIndex], initialIndex);
 
   pillBtn.addEventListener('click', () => {
-    addEntry();
-    pillBtn.classList.remove('taken');
+    pillBtn.classList.remove('clicked');
     void pillBtn.offsetWidth;
-    pillBtn.classList.add('taken');
+    pillBtn.classList.add('clicked');
   });
-
-  historyList.addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-id]');
-    if (btn) {
-      removeEntry(Number(btn.dataset.id));
-    }
-  });
-
-  clearAllBtn.addEventListener('click', () => {
-    if (confirm('Delete all history?')) {
-      saveHistory([]);
-      renderHistory();
-      updateStatus();
-    }
-  });
-
-  renderHistory();
-  updateStatus();
-  setInterval(updateStatus, 60000);
 </script>
 
 </body>
