@@ -4,16 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PILLZ</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect x=%2210%22 y=%2235%22 width=%2280%22 height=%2230%22 rx=%2215%22 fill=%22%23e0a3c8%22/><rect x=%2210%22 y=%2235%22 width=%2240%22 height=%2230%22 rx=%2215%22 fill=%22%23fff%22/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect x=%2210%22 y=%2235%22 width=%2280%22 height=%2230%22 rx=%2215%22 fill=%22%23c9a8e0%22/><rect x=%2210%22 y=%2235%22 width=%2240%22 height=%2230%22 rx=%2215%22 fill=%22%23fff%22/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --accent: #e0a3c8;
-    --bg: #2b2438;
-    --text: #f3e9f7;
-    --pill-shadow: rgba(224, 163, 200, 0.4);
+    --accent: #c9a8e0;
+    --bg: #f7f0e6;
+    --text: #4a3b45;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,215 +40,156 @@
     z-index: 10;
   }
 
-  .swatch {
+  .theme-dot {
     width: 22px;
     height: 22px;
     border-radius: 50%;
     border: 2px solid transparent;
     cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    padding: 0;
+    transition: border-color 0.2s ease, transform 0.2s ease;
   }
 
-  .swatch.active {
+  .theme-dot.active {
     border-color: var(--text);
     transform: scale(1.15);
   }
 
   h1 {
     font-family: 'Anton', sans-serif;
-    font-weight: 400;
-    font-size: clamp(2.5rem, 10vw, 4.5rem);
-    letter-spacing: 0.03em;
+    font-size: 2.8rem;
+    letter-spacing: 0.05em;
     color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
     transition: color 0.4s ease;
   }
 
   .pill-btn {
-    width: 140px;
-    height: 60px;
+    width: 190px;
+    height: 80px;
     border-radius: 999px;
     border: none;
-    background: var(--accent);
     cursor: pointer;
-    box-shadow: 0 8px 24px var(--pill-shadow);
-    transition: transform 0.15s ease, box-shadow 0.3s ease, background 0.4s ease;
+    background: linear-gradient(90deg, #ffffff 50%, var(--accent) 50%);
+    transition: transform 0.15s ease, background 0.4s ease;
   }
 
-  .pill-btn:active { transform: scale(0.9) rotate(-8deg); }
-  .pill-btn.clicked { animation: pop 0.5s ease; }
-
-  @keyframes pop {
-    0%   { transform: scale(1) rotate(0deg); }
-    30%  { transform: scale(1.3) rotate(15deg); }
-    50%  { transform: scale(0.85) rotate(-10deg); }
-    70%  { transform: scale(1.1) rotate(5deg); }
-    100% { transform: scale(1) rotate(0deg); }
+  .pill-btn:active {
+    transform: scale(0.95);
   }
 
-  .subtitle {
-    font-size: 0.95rem;
+  .pill-btn.clicked {
+    animation: bounce 0.4s ease;
+  }
+
+  @keyframes bounce {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.15); }
+    60% { transform: scale(0.92); }
+    100% { transform: scale(1); }
+  }
+
+  .hint {
+    margin-top: 1.6rem;
+    font-size: 0.9rem;
     opacity: 0.6;
-    letter-spacing: 0.05em;
-    margin-top: 1.2rem;
   }
 
-  .history-block {
+  .history {
     margin-top: 3rem;
     width: 100%;
-    max-width: 340px;
+    max-width: 360px;
   }
 
-  .history-title {
+  .history h2 {
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    opacity: 0.5;
-    margin-bottom: 0.8rem;
+    opacity: 0.55;
+    margin-bottom: 1rem;
+    font-weight: 500;
   }
 
-  .history-list {
-    list-style: none;
+  .entry {
     display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-
-  .history-item {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    background: rgba(255, 255, 255, 0.06);
-    padding: 0.7rem 1rem;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.06);
     border-radius: 12px;
-    font-size: 0.95rem;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 0.6rem;
+    font-size: 1rem;
+    font-weight: 500;
   }
 
-  .history-item .empty {
-    opacity: 0.4;
-    font-style: italic;
-  }
-
-  .delete-btn {
+  .entry button {
     background: none;
     border: none;
-    color: inherit;
+    color: var(--text);
     opacity: 0.5;
-    font-size: 1rem;
+    font-size: 1.1rem;
     cursor: pointer;
-    padding: 0.2rem 0.5rem;
-    transition: opacity 0.2s ease;
+    line-height: 1;
+    padding: 0.2rem 0.4rem;
   }
 
-  .delete-btn:active { opacity: 1; }
+  .entry button:active {
+    opacity: 1;
+  }
 
-  li.empty {
-    list-style: none;
+  .empty {
     opacity: 0.4;
-    font-style: italic;
-    padding: 0.7rem 1rem;
+    font-size: 0.95rem;
+    margin-top: 1rem;
   }
 </style>
 </head>
 <body>
 
-  <div class="theme-picker" id="themePicker"></div>
+<div class="theme-picker" id="themePicker"></div>
 
-  <h1>PILLZ</h1>
+<h1>PILLZ</h1>
 
-  <button class="pill-btn" id="pillBtn" aria-label="Enregistrer une prise"></button>
-  <p class="subtitle">Appuie pour enregistrer une prise</p>
+<button class="pill-btn" id="pillBtn" aria-label="Enregistrer une prise"></button>
+<p class="hint">Appuie pour enregistrer une prise</p>
 
-  <div class="history-block">
-    <p class="history-title">Aujourd'hui</p>
-    <ul class="history-list" id="historyList"></ul>
-  </div>
+<div class="history">
+  <h2>Aujourd'hui</h2>
+  <div id="entriesList"></div>
+</div>
 
 <script>
-  const root = document.documentElement;
-  const picker = document.getElementById('themePicker');
-  const pillBtn = document.getElementById('pillBtn');
-  const historyList = document.getElementById('historyList');
-
   const themes = [
+    { bg: '#f7f0e6', text: '#4a3b45', accent: '#c9a8e0' },
     { bg: '#2b2438', text: '#f3e9f7', accent: '#e0a3c8' },
     { bg: '#233029', text: '#e6f2ea', accent: '#9bc9a8' },
     { bg: '#2e2624', text: '#f5e8dc', accent: '#e0b088' },
-    { bg: '#fdf1f5', text: '#4a3b45', accent: '#f2a6c4' },
     { bg: '#f0f7f2', text: '#37453d', accent: '#a8d4b5' },
     { bg: '#fdf6ec', text: '#4a4033', accent: '#f0c987' }
   ];
 
+  const root = document.documentElement;
+  const picker = document.getElementById('themePicker');
+  const pillBtn = document.getElementById('pillBtn');
+  const entriesList = document.getElementById('entriesList');
+
   function todayKey() {
-    const d = new Date();
-    return 'pillz-' + d.toISOString().slice(0, 10);
-  }
-
-  function loadEntries() {
-    const raw = localStorage.getItem(todayKey());
-    return raw ? JSON.parse(raw) : [];
-  }
-
-  function saveEntries(entries) {
-    localStorage.setItem(todayKey(), JSON.stringify(entries));
-  }
-
-  function renderHistory() {
-    const entries = loadEntries();
-    historyList.innerHTML = '';
-
-    if (entries.length === 0) {
-      historyList.innerHTML = '<li class="empty">Aucune prise enregistrée</li>';
-      return;
-    }
-
-    entries.slice().reverse().forEach((entry) => {
-      const li = document.createElement('li');
-      li.className = 'history-item';
-      const time = document.createElement('span');
-      time.textContent = entry.time;
-      const delBtn = document.createElement('button');
-      delBtn.className = 'delete-btn';
-      delBtn.textContent = '✕';
-      delBtn.setAttribute('aria-label', 'Supprimer cette prise');
-      delBtn.addEventListener('click', () => {
-        const current = loadEntries();
-        const updated = current.filter((e) => e.id !== entry.id);
-        saveEntries(updated);
-        renderHistory();
-      });
-      li.appendChild(time);
-      li.appendChild(delBtn);
-      historyList.appendChild(li);
-    });
-  }
-
-  function addEntry() {
-    const entries = loadEntries();
-    const now = new Date();
-    entries.push({
-      id: Date.now(),
-      time: now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
-    });
-    saveEntries(entries);
-    renderHistory();
+    return new Date().toISOString().slice(0, 10);
   }
 
   function applyTheme(theme, index) {
     root.style.setProperty('--bg', theme.bg);
     root.style.setProperty('--text', theme.text);
     root.style.setProperty('--accent', theme.accent);
-    root.style.setProperty('--pill-shadow', theme.accent + '66');
-    localStorage.setItem('pillz-theme', index);
-    document.querySelectorAll('.swatch').forEach((s, i) => {
-      s.classList.toggle('active', i === index);
+    document.querySelectorAll('.theme-dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
     });
+    localStorage.setItem('pillz-theme', index);
   }
 
   themes.forEach((theme, i) => {
     const btn = document.createElement('button');
-    btn.className = 'swatch';
+    btn.className = 'theme-dot';
     btn.style.background = theme.accent;
     btn.setAttribute('aria-label', 'Thème ' + (i + 1));
     btn.addEventListener('click', () => applyTheme(theme, i));
@@ -259,6 +199,49 @@
   const saved = localStorage.getItem('pillz-theme');
   const initialIndex = saved !== null ? parseInt(saved) : 0;
   applyTheme(themes[initialIndex], initialIndex);
+
+  function getEntries() {
+    const data = JSON.parse(localStorage.getItem('pillz-entries') || '{}');
+    return data[todayKey()] || [];
+  }
+
+  function saveEntries(entries) {
+    const data = JSON.parse(localStorage.getItem('pillz-entries') || '{}');
+    data[todayKey()] = entries;
+    localStorage.setItem('pillz-entries', JSON.stringify(data));
+  }
+
+  function addEntry() {
+    const now = new Date();
+    const time = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    const entries = getEntries();
+    entries.unshift(time);
+    saveEntries(entries);
+    renderHistory();
+  }
+
+  function deleteEntry(index) {
+    const entries = getEntries();
+    entries.splice(index, 1);
+    saveEntries(entries);
+    renderHistory();
+  }
+
+  function renderHistory() {
+    const entries = getEntries();
+    entriesList.innerHTML = '';
+    if (entries.length === 0) {
+      entriesList.innerHTML = '<p class="empty">Aucune prise enregistrée</p>';
+      return;
+    }
+    entries.forEach((time, i) => {
+      const row = document.createElement('div');
+      row.className = 'entry';
+      row.innerHTML = `<span>${time}</span><button aria-label="Supprimer">✕</button>`;
+      row.querySelector('button').addEventListener('click', () => deleteEntry(i));
+      entriesList.appendChild(row);
+    });
+  }
 
   pillBtn.addEventListener('click', () => {
     pillBtn.classList.remove('clicked');
